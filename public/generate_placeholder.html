@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Placeholder Image</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin: 20px 0;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #8e44ad;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #703688;
+    }
+    .instructions {
+      max-width: 600px;
+      margin: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Product Placeholder Image Generator</h1>
+  
+  <div class="instructions">
+    <p>This utility creates a simple placeholder image for your products. Right-click on the image and select "Save Image As..." to save it as placeholder.jpg in your server/uploads directory.</p>
+  </div>
+  
+  <canvas id="canvas" width="400" height="400"></canvas>
+  
+  <button id="download">Download Placeholder Image</button>
+  
+  <script>
+    // Get canvas and context
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Draw background
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw border
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(2, 2, canvas.width-4, canvas.height-4);
+    
+    // Draw text
+    ctx.fillStyle = '#8e44ad';
+    ctx.font = 'bold 30px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Product Image', canvas.width/2, canvas.height/2 - 20);
+    
+    ctx.fillStyle = '#333';
+    ctx.font = '20px Arial';
+    ctx.fillText('Not Available', canvas.width/2, canvas.height/2 + 20);
+    
+    // Draw icon
+    ctx.strokeStyle = '#8e44ad';
+    ctx.lineWidth = 4;
+    
+    // Draw a camera icon
+    const iconSize = 80;
+    const iconX = canvas.width/2 - iconSize/2;
+    const iconY = canvas.height/2 - 100;
+    
+    // Camera body
+    ctx.strokeRect(iconX, iconY, iconSize, iconSize * 0.8);
+    
+    // Camera lens
+    ctx.beginPath();
+    ctx.arc(iconX + iconSize/2, iconY + iconSize * 0.4, iconSize * 0.25, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Camera flash
+    ctx.fillStyle = '#8e44ad';
+    ctx.fillRect(iconX + iconSize * 0.7, iconY - iconSize * 0.1, iconSize * 0.2, iconSize * 0.1);
+    
+    // Download functionality
+    document.getElementById('download').addEventListener('click', function() {
+      const link = document.createElement('a');
+      link.download = 'placeholder.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.8);
+      link.click();
+    });
+  </script>
+</body>
+</html> 
