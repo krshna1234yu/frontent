@@ -123,30 +123,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware to catch problematic URLs that would cause path-to-regexp issues
-app.use((req, res, next) => {
-  // Define patterns that cause issues with path-to-regexp
-  const problematicPatterns = [
-    'https://git.new/pathToRegexpError',
-    'https://',
-    'http://'
-  ];
-  
-  // Check if URL contains problematic patterns
-  const isProblematic = problematicPatterns.some(pattern => 
-    req.path.includes(pattern) || req.originalUrl.includes(pattern)
-  );
-  
-  if (isProblematic) {
-    console.warn(`🔴 Blocked request with problematic URL pattern: ${req.originalUrl}`);
-    return res.status(400).json({
-      error: 'Invalid URL format',
-      message: 'The URL contains patterns that are not supported by the server'
-    });
-  }
-  
-  next();
-});
 
 // Static folder for uploaded images
 app.use("/uploads", express.static(path.join(__dirname, 'uploads')));

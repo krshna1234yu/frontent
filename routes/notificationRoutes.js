@@ -31,8 +31,39 @@ router.get("/user/:userId", protect, async (req, res) => {
   }
 });
 
-// Mark a notification as read
-router.put("/:notificationId/read", protect, async (req, res) => {
+// Mark all notifications for a user as read
+router.put("/user/:userId/read-all", protect, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Validate user ID
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+    
+    // Check if the requesting user is the same as the user in the params
+    if (req.user._id.toString() !== userId) {
+      return res.status(403).json({ message: "Not authorized to modify these notifications" });
+    }
+    
+    // Update all unread notifications to read
+    const result = await Notification.updateMany(
+      { userId, isRead: false },
+      { $set: { isRead: true } }
+    );
+    
+    res.json({ 
+      message: "All notifications marked as read", 
+      modified: result.modifiedCount 
+    });
+  } catch (error) {
+    console.error("Error marking all notifications as read:", error);
+    res.status(500).json({ message: "Failed to update notifications", error: error.message });
+  }
+});
+
+// Mark a single notification as read
+router.put("/notification/:notificationId/read", protect, async (req, res) => {
   try {
     const { notificationId } = req.params;
     
@@ -65,35 +96,4 @@ router.put("/:notificationId/read", protect, async (req, res) => {
   }
 });
 
-// Mark all notifications for a user as read
-router.put("/user/:userId/read-all", protect, async (req, res) => {
-  try {
-    const { userId } = req.params;
-    
-    // Validate user ID
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID format" });
-    }
-    
-    // Check if the requesting user is the same as the user in the params
-    if (req.user._id.toString() !== userId) {
-      return res.status(403).json({ message: "Not authorized to modify these notifications" });
-    }
-    
-    // Update all unread notifications to read
-    const result = await Notification.updateMany(
-      { userId, isRead: false },
-      { $set: { isRead: true } }
-    );
-    
-    res.json({ 
-      message: "All notifications marked as read", 
-      modified: result.modifiedCount 
-    });
-  } catch (error) {
-    console.error("Error marking all notifications as read:", error);
-    res.status(500).json({ message: "Failed to update notifications", error: error.message });
-  }
-});
-
-module.exports = router; 
+module.exports = router;
