@@ -599,7 +599,7 @@ const productRoutes = require("./routes/productRoutes");
 const authRoutes = require("./routes/auth");
 const orderRoutes = require("./routes/orderRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
-const messageRoutes = require("./routes/messageRoutes");
+// const messageRoutes = require("./routes/messageRoutes");
 
 // Create a wrapper for route registration to handle errors
 const safeUseRoute = (app, path, router) => {
@@ -631,7 +631,7 @@ safeUseRoute(app, '/api/users', userRoutes);
 safeUseRoute(app, '/api/products', productRoutes);
 safeUseRoute(app, '/api/auth', authRoutes);
 safeUseRoute(app, '/api/orders', orderRoutes);
-safeUseRoute(app, '/api/messages', messageRoutes);
+// safeUseRoute(app, '/api/messages', messageRoutes);
 safeUseRoute(app, '/api/notifications', notificationRoutes);
 
 console.log("✅ Route registration completed");
